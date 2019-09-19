@@ -1,5 +1,5 @@
-##JAVA Unit Testing AND Integration Testing on SNAKE GAME
+# JAVA Unit Testing AND Integration Testing on SNAKE GAME
 
-Developed a SANKE GAME to perform unit testing and integration testing.
+### Developed a SNAKE GAME to perform Unit Testing and Integration Testing.
 
 
