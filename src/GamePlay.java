@@ -6,130 +6,131 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 
 public class GamePlay extends JPanel implements KeyListener,ActionListener{
-
-    private final int[] snakeXLength = new int[750];
-    private final int[] snakeYLength = new int[750];
-    
-    private boolean left =false;
-    private boolean right =false;
-    private boolean up =false;
-    private boolean down =false;
-    
-    private ImageIcon rightmouth;
-    private ImageIcon upmouth;
-    private ImageIcon downmouth;
-    private ImageIcon leftmouth;
-    
-    private int snakeLen =3;
-    private final Timer timer;
-    private final int delay = 100;
-    private  int moves=0;
-    private int score=0;
-    
-    private ImageIcon snakeImage;
-    private ImageIcon titleImage;
-    private ImageIcon enemyImage;
-    
-    
-    
-    private final int[] enemyXPos={25,50,75,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500,
-                            525,550,575,600,625,650,675,700,725,750,775,800,825,850};
-    private final int[] enemyYPos={75,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500,
-                            525,550,575,600,625};
-    
-    private final Random random = new Random();
-    private int xpos = random.nextInt(34);
-    private int ypos = random.nextInt(23);
-    
-    public GamePlay() {
+    Variables variables;
+    public GamePlay(){
         addKeyListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
-        timer = new Timer(delay, this);
-        timer.start();
+        
+        variables = new Variables();
+        
+        variables.setDelay(100);
+        variables.setTimer(new Timer(variables.getDelay(), this));
+        variables.getTimer().start();
+        
+        variables.setSnakeLen(3);
+        variables.setMoves(0);
+        variables.setDown(false);
+        variables.setRight(false);
+        variables.setLeft(false);
+        variables.setUp(false);
     }
     
     @Override
     public void paint(Graphics g){
-        
-        if(moves==0){
-            snakeXLength[2]=50;
-            snakeXLength[1]=75;
-            snakeXLength[0] = 100;
-            
-            snakeYLength[2]=100;
-            snakeYLength[1]=100;
-            snakeYLength[0] = 100;
-        }
+        createBackground(g);
+        setScore(g);
+        displaySnakeLen(g);
+        createSnake(g);
+        createEnemy(g);
+        checkGameExit(g);
+        g.dispose();
+    }
+    
+    public void createBackground(Graphics g){
         g.setColor(Color.white);
         g.drawRect(24, 10, 851, 55);
-        
         //title imaage
-        titleImage = new ImageIcon("/home/shubham/NetBeansProjects/SnakeGame/src/image/snaketitle.jpg");
-        titleImage.paintIcon(this, g, 25, 11);
+        variables.setTitleImage(new ImageIcon("/home/shubham/NetBeansProjects/SnakeGame/src/image/snaketitle.jpg"));
+        variables.getTitleImage().paintIcon(this, g, 25, 11);
         g.setColor(Color.WHITE);
         g.drawRect(24, 74, 851, 577);
         g.setColor(Color.black);
         g.fillRect(25, 75, 850, 575);
-        
-        //score
+    }
+    
+    public void setScore(Graphics g){
         g.setColor(Color.white);
         g.setFont(new Font("arial",Font.PLAIN, 14));
-        g.drawString("Score: "+score, 780, 30);
-        
-        //len of snake
+        g.drawString("Score: "+variables.getScore(), 780, 30);
+    }
+    
+    public void displaySnakeLen(Graphics g){
         g.setColor(Color.white);
         g.setFont(new Font("arial",Font.PLAIN, 14));
-        g.drawString("Length: "+snakeLen, 780, 50);
+        g.drawString("Length: "+variables.getSnakeLen(), 780, 50);
+    }
+    
+    public void createSnake(Graphics g){
+        if(variables.getMoves()==0){
+            variables.snakeXLength[2]=50;
+            variables.snakeXLength[1]=75;
+            variables.snakeXLength[0] = 100;
+            
+            variables.snakeYLength[2]=100;
+            variables.snakeYLength[1]=100;
+            variables.snakeYLength[0] = 100;
+        }
+        variables.setRightmouth(new ImageIcon("/home/shubham/NetBeansProjects/SnakeGame/src/image/rightmouth.png"));
+        variables.getRightmouth().paintIcon(this, g, variables.getSnakeXLength()[0], variables.getSnakeYLength()[0]);
         
-        rightmouth = new ImageIcon("/home/shubham/NetBeansProjects/SnakeGame/src/image/rightmouth.png");
-        rightmouth.paintIcon(this, g, snakeXLength[0], snakeYLength[0]);
-        
-        for(int i=0;i<snakeLen;i++){
-            if(i==0 && right){
-                rightmouth = new ImageIcon("/home/shubham/NetBeansProjects/SnakeGame/src/image/rightmouth.png");
-                rightmouth.paintIcon(this, g, snakeXLength[i], snakeYLength[i]);
+        for(int i=0;i<variables.getSnakeLen();i++){
+            if(i==0 && variables.isRight()){
+                variables.setRightmouth(new ImageIcon("/home/shubham/NetBeansProjects/SnakeGame/src/image/rightmouth.png"));
+                variables.getRightmouth().paintIcon(this, g, variables.getSnakeXLength()[i], variables.getSnakeYLength()[i]);
             }
-            if(i==0 && left){
-                leftmouth = new ImageIcon("/home/shubham/NetBeansProjects/SnakeGame/src/image/leftmouth.png");
-                leftmouth.paintIcon(this, g, snakeXLength[i], snakeYLength[i]);
+            if(i==0 && variables.isLeft()){
+                variables.setLeftmouth(new ImageIcon("/home/shubham/NetBeansProjects/SnakeGame/src/image/leftmouth.png"));
+                variables.getLeftmouth().paintIcon(this, g, variables.getSnakeXLength()[i], variables.getSnakeYLength()[i]);
             }
-            if(i==0 && down){
-                downmouth = new ImageIcon("/home/shubham/NetBeansProjects/SnakeGame/src/image/downmouth.png");
-                downmouth.paintIcon(this, g, snakeXLength[i], snakeYLength[i]);
+            if(i==0 && variables.isDown()){
+                variables.setDownmouth(new ImageIcon("/home/shubham/NetBeansProjects/SnakeGame/src/image/downmouth.png"));
+                variables.getDownmouth().paintIcon(this, g, variables.getSnakeXLength()[i], variables.getSnakeYLength()[i]);
             }
-            if(i==0 && up){
-                upmouth = new ImageIcon("/home/shubham/NetBeansProjects/SnakeGame/src/image/upmouth.png");
-                upmouth.paintIcon(this, g, snakeXLength[i], snakeYLength[i]);
+            if(i==0 && variables.isUp()){
+                variables.setUpmouth(new ImageIcon("/home/shubham/NetBeansProjects/SnakeGame/src/image/upmouth.png"));
+                variables.getUpmouth().paintIcon(this, g, variables.getSnakeXLength()[i], variables.getSnakeYLength()[i]);
             }
             if(i!=0){
-                snakeImage = new ImageIcon("/home/shubham/NetBeansProjects/SnakeGame/src/image/snakeimage.png");
-                snakeImage.paintIcon(this, g, snakeXLength[i], snakeYLength[i]);
+                variables.setSnakeImage(new ImageIcon("/home/shubham/NetBeansProjects/SnakeGame/src/image/snakeimage.png"));
+                variables.getSnakeImage().paintIcon(this, g, variables.getSnakeXLength()[i], variables.getSnakeYLength()[i]);
             }
         }
-        
-        enemyImage = new ImageIcon("/home/shubham/NetBeansProjects/SnakeGame/src/image/enemy.png");
-        if(enemyXPos[xpos]==snakeXLength[0] && enemyYPos[ypos]==snakeYLength[0]){
-            snakeLen++;
-            score++;
-            xpos = random.nextInt(34);
-            ypos = random.nextInt(23);
+    }
+    
+    public void createEnemy(Graphics g){
+        variables.setEnemyImage(new ImageIcon("/home/shubham/NetBeansProjects/SnakeGame/src/image/enemy.png"));
+        if(variables.getEnemyXPos()[variables.getXpos()]==variables.getSnakeXLength()[0] &&
+                variables.getEnemyYPos()[variables.getYpos()]==variables.getSnakeYLength()[0]){
+            int snakeLen = variables.getSnakeLen();
+            snakeLen = snakeLen+1;
+            variables.setSnakeLen(snakeLen);
+            
+            int score = variables.getScore();
+            score = score+1;
+            variables.setScore(score);
+            
+            variables.setXpos(variables.getRandom().nextInt(34));
+            variables.setYpos(variables.getRandom().nextInt(23));
         }
-        enemyImage.paintIcon(this, g, enemyXPos[xpos], enemyYPos[ypos]);
-        
-        for(int i=1;i<snakeLen;i++){
-            if(snakeXLength[i]==snakeXLength[0] && snakeYLength[i]==snakeYLength[0]){
-                right=false;
-                left=false;
-                up=false;
-                down=false;
+        variables.getEnemyImage().paintIcon(this, g, variables.getEnemyXPos()[variables.getXpos()], 
+                variables.getEnemyYPos()[variables.getYpos()]);
+    }
+    
+    public void checkGameExit(Graphics g){
+        for(int i=1;i<variables.getSnakeLen();i++){
+            if(variables.getSnakeXLength()[i]==variables.getSnakeXLength()[0] && 
+                    variables.getSnakeYLength()[i]==variables.getSnakeYLength()[0]){
+                variables.setRight(false);
+                variables.setLeft(false);
+                variables.setUp(false);
+                variables.setDown(false);
                 g.setColor(Color.white);
                 g.setFont(new Font("arial",Font.BOLD, 50));
                 g.drawString("Game over:", 300, 300);
@@ -139,7 +140,6 @@ public class GamePlay extends JPanel implements KeyListener,ActionListener{
                 g.drawString("Press space bar RESTRAT:", 350, 340);
             }
         }
-        g.dispose();
     }
 
     @Override
@@ -150,59 +150,63 @@ public class GamePlay extends JPanel implements KeyListener,ActionListener{
     @Override
     public void keyPressed(KeyEvent e) {
         if(e.getKeyCode() == KeyEvent.VK_SPACE){
-            moves =0;
-            score=0;
-            snakeLen=3;
+            variables.setMoves(0);
+            variables.setScore(0);
+            variables.setSnakeLen(3);
             repaint();
         }
-        
         if(e.getKeyCode() == KeyEvent.VK_RIGHT){
-            moves++;
-            right = true;
-            if(!left)
-                right=true;
+            int move= variables.getMoves();
+            move = move+1;
+            variables.setMoves(move);
+            variables.setRight(true);
+            if(!variables.isLeft())
+                variables.setRight(true);
             else{
-                right=false;
-                left=true;
+                variables.setRight(false);
+                variables.setLeft(true);
             }
-            up=false;
-            down=false;
+            variables.setUp(false);
+            variables.setDown(false);
         }
         if(e.getKeyCode() == KeyEvent.VK_LEFT){
-            moves++;
-            left = true;
-            if(!right)
-                left=true;
+            int move= variables.getMoves();
+            variables.setMoves(move++);
+            variables.setLeft(true);
+            if(!variables.isRight())
+                variables.setLeft(true);
             else{
-                left=false;
-                right=true;
+                variables.setLeft(false);
+                variables.setRight(true);
             }
-            up=false;
-            down=false;
+            variables.setUp(false);
+            variables.setDown(false);
         }
         if(e.getKeyCode() == KeyEvent.VK_UP){
-            moves++;
-            up = true;
-            if(!down)
-                up=true;
+            int move= variables.getMoves();
+            variables.setMoves(move++);
+            variables.setUp(true);
+            if(!variables.isDown())
+                variables.setUp(true);
             else{
-                up=false;
-                down=true;
+                variables.setUp(false);
+                variables.setDown(true);
             }
-            right=false;
-            left=false;
+            variables.setRight(false);
+            variables.setLeft(false);
         }
         if(e.getKeyCode() == KeyEvent.VK_DOWN){
-            moves++;
-            down = true;
-            if(!up)
-                down=true;
+            int move= variables.getMoves();
+            variables.setMoves(move++);
+            variables.setDown(true);
+            if(!variables.isUp())
+                variables.setDown(true);
             else{
-                down=false;
-                up=true;
+                variables.setUp(true);
+                variables.setDown(false);
             }
-            right=false;
-            left=false;
+            variables.setRight(false);
+            variables.setLeft(false);
         }
     }
 
@@ -213,66 +217,68 @@ public class GamePlay extends JPanel implements KeyListener,ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        timer.start();
-        if(right){
-            for(int i=snakeLen-1;i>=0;i--){
-                snakeYLength[i+1] = snakeYLength[i];
+        variables.getTimer().start();
+        if(variables.isRight()){
+            for(int i=variables.getSnakeLen()-1;i>=0;i--){
+                variables.snakeYLength[i+1] = variables.snakeYLength[i];
             }
-            for(int i=snakeLen;i>=0;i--){
+            for(int i=variables.getSnakeLen();i>=0;i--){
                 if(i==0){
-                    snakeXLength[i] = snakeXLength[i]+25;
+                    variables.snakeXLength[i] = variables.snakeXLength[i]+25;
                 }
                 else
-                    snakeXLength[i]= snakeXLength[i-1];
-                if(snakeXLength[i]>850)
-                    snakeXLength[i]=25;
+                    variables.snakeXLength[i]= variables.snakeXLength[i-1];
+                if(variables.getSnakeXLength()[i]>850)
+                    variables.snakeXLength[i]=25;
             }
             repaint();
         }
-        if(left){
-            for(int i=snakeLen-1;i>=0;i--){
-                snakeYLength[i+1] = snakeYLength[i];
+        if(variables.isLeft()){
+            for(int i=variables.getSnakeLen()-1;i>=0;i--){
+                variables.snakeYLength[i+1] = variables.snakeYLength[i];
             }
-            for(int i=snakeLen;i>=0;i--){
+            for(int i=variables.getSnakeLen();i>=0;i--){
                 if(i==0){
-                    snakeXLength[i] = snakeXLength[i]-25;
+                    variables.snakeXLength[i] = variables.snakeXLength[i]-25;
                 }
                 else
-                    snakeXLength[i]= snakeXLength[i-1];
-                if(snakeXLength[i]<25)
-                    snakeXLength[i]=850;
+                    variables.snakeXLength[i]= variables.snakeXLength[i-1];
+                if(variables.getSnakeXLength()[i]<25)
+                    variables.snakeXLength[i]=850;
             }
             repaint();
         }
-        if(up){
-            for(int i=snakeLen-1;i>=0;i--){
-                snakeXLength[i+1] = snakeXLength[i];
+        if(variables.isUp()){
+            for(int i=variables.getSnakeLen()-1;i>=0;i--){
+                variables.snakeXLength[i+1] = variables.snakeXLength[i];
             }
-            for(int i=snakeLen;i>=0;i--){
+            for(int i=variables.getSnakeLen();i>=0;i--){
                 if(i==0){
-                    snakeYLength[i] = snakeYLength[i]-25;
+                    variables.snakeYLength[i] = variables.snakeYLength[i]-25;
                 }
                 else
-                    snakeYLength[i]= snakeYLength[i-1];
-                if(snakeYLength[i]<75)
-                    snakeYLength[i]=625;
+                    variables.snakeYLength[i]= variables.snakeYLength[i-1];
+                if(variables.getSnakeYLength()[i]<75)
+                    variables.snakeYLength[i]=625;
             }
             repaint();
         }
-        if(down){
-            for(int i=snakeLen-1;i>=0;i--){
-                snakeXLength[i+1] = snakeXLength[i];
+        if(variables.isDown()){
+            for(int i=variables.getSnakeLen()-1;i>=0;i--){
+                variables.snakeXLength[i+1] = variables.snakeXLength[i];
             }
-            for(int i=snakeLen;i>=0;i--){
+            for(int i=variables.getSnakeLen();i>=0;i--){
                 if(i==0){
-                    snakeYLength[i] = snakeYLength[i]+25;
+                    variables.snakeYLength[i] = variables.snakeYLength[i]+25;
                 }
                 else
-                    snakeYLength[i]= snakeYLength[i-1];
-                if(snakeYLength[i]>625)
-                    snakeYLength[i]=75;
+                    variables.snakeYLength[i]= variables.snakeYLength[i-1];
+                if(variables.getSnakeYLength()[i]>625)
+                    variables.snakeYLength[i]=75;
             }
             repaint();
         }
     }
+
+    
 }
