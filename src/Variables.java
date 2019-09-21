@@ -1,40 +1,50 @@
 
+import java.awt.Graphics;
 import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
 
 public class Variables {
-    private ImageIcon titleImage;
-    private int score;
-    private int snakeLen;
-    private int moves;
-    private Timer timer=null;
-    private int delay;
+    static private ImageIcon titleImage;
+    static private int score;
+    static private int snakeLen;
+    static private int moves;
+    static private Timer timer=null;
+    static private Graphics graphics=null;
 
-    public final int[] snakeXLength = new int[750];
-    public final int[] snakeYLength = new int[750];
+    public static Graphics getGraphics() {
+        return graphics;
+    }
+
+    public static void setGraphics(Graphics graphics) {
+        Variables.graphics = graphics;
+    }
+    static private int delay;
+
+    static public final int[] snakeXLength = new int[750];
+    static public final int[] snakeYLength = new int[750];
     
-    private boolean left =false;
-    private boolean right =false;
-    private boolean up =false;
-    private boolean down =false;
+    static private boolean left =false;
+    static private boolean right =false;
+    static private boolean up =false;
+    static private boolean down =false;
     
-    private ImageIcon rightmouth;
-    private ImageIcon upmouth;
-    private ImageIcon downmouth;
-    private ImageIcon leftmouth;
-    private ImageIcon snakeImage;
-    private ImageIcon enemyImage;
+    static private ImageIcon rightmouth;
+    static private ImageIcon upmouth;
+    static private ImageIcon downmouth;
+    static private ImageIcon leftmouth;
+    static private ImageIcon snakeImage;
+    static private ImageIcon enemyImage;
     
-    private final int[] enemyXPos={25,50,75,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500,
+    static private final int[] enemyXPos={25,50,75,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500,
                             525,550,575,600,625,650,675,700,725,750,775,800,825,850};
-    private final int[] enemyYPos={75,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500,
+    static private final int[] enemyYPos={75,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500,
                             525,550,575,600,625};
     
-    private final Random random = new Random();
-    private int xpos = random.nextInt(34);
-    private int ypos = random.nextInt(23);
-
+    static private final Random random = new Random();
+    static private int xpos = random.nextInt(34);
+    static private int ypos = random.nextInt(23);
+    
     public int[] getEnemyXPos() {
         return enemyXPos;
     }
@@ -54,7 +64,7 @@ public class Variables {
     }
 
     public void setEnemyImage(ImageIcon enemyImage) {
-        this.enemyImage = enemyImage;
+        Variables.enemyImage = enemyImage;
     }
 
     public int getXpos() {
@@ -62,7 +72,7 @@ public class Variables {
     }
 
     public void setXpos(int xpos) {
-        this.xpos = xpos;
+        Variables.xpos = xpos;
     }
 
     public int getYpos() {
@@ -70,7 +80,7 @@ public class Variables {
     }
 
     public void setYpos(int ypos) {
-        this.ypos = ypos;
+        Variables.ypos = ypos;
     }
     
     
@@ -80,7 +90,7 @@ public class Variables {
     }
 
     public void setTimer(Timer timer) {
-        this.timer = timer;
+        Variables.timer = timer;
     }
 
     public int getDelay() {
@@ -88,7 +98,7 @@ public class Variables {
     }
 
     public void setDelay(int delay) {
-        this.delay = delay;
+        Variables.delay = delay;
     }
 
     public int getMoves() {
@@ -96,7 +106,7 @@ public class Variables {
     }
 
     public void setMoves(int moves) {
-        this.moves = moves;
+        Variables.moves = moves;
     }
     
     public int[] getSnakeXLength() {
@@ -112,7 +122,7 @@ public class Variables {
     }
 
     public void setSnakeImage(ImageIcon snakeImage) {
-        this.snakeImage = snakeImage;
+        Variables.snakeImage = snakeImage;
     }
     
     public boolean isLeft() {
@@ -120,7 +130,7 @@ public class Variables {
     }
 
     public void setLeft(boolean left) {
-        this.left = left;
+        Variables.left = left;
     }
 
     public boolean isRight() {
@@ -128,7 +138,7 @@ public class Variables {
     }
 
     public void setRight(boolean right) {
-        this.right = right;
+        Variables.right = right;
     }
 
     public boolean isUp() {
@@ -136,7 +146,7 @@ public class Variables {
     }
 
     public void setUp(boolean up) {
-        this.up = up;
+        Variables.up = up;
     }
 
     public boolean isDown() {
@@ -144,7 +154,7 @@ public class Variables {
     }
 
     public void setDown(boolean down) {
-        this.down = down;
+        Variables.down = down;
     }
 
     public ImageIcon getRightmouth() {
@@ -152,7 +162,7 @@ public class Variables {
     }
 
     public void setRightmouth(ImageIcon rightmouth) {
-        this.rightmouth = rightmouth;
+        Variables.rightmouth = rightmouth;
     }
 
     public ImageIcon getUpmouth() {
@@ -160,7 +170,7 @@ public class Variables {
     }
 
     public void setUpmouth(ImageIcon upmouth) {
-        this.upmouth = upmouth;
+        Variables.upmouth = upmouth;
     }
 
     public ImageIcon getDownmouth() {
@@ -168,7 +178,7 @@ public class Variables {
     }
 
     public void setDownmouth(ImageIcon downmouth) {
-        this.downmouth = downmouth;
+        Variables.downmouth = downmouth;
     }
 
     public ImageIcon getLeftmouth() {
@@ -176,7 +186,7 @@ public class Variables {
     }
 
     public void setLeftmouth(ImageIcon leftmouth) {
-        this.leftmouth = leftmouth;
+        Variables.leftmouth = leftmouth;
     }
 
     public int getSnakeLen() {
@@ -184,7 +194,7 @@ public class Variables {
     }
 
     public void setSnakeLen(int snakeLen) {
-        this.snakeLen = snakeLen;
+        Variables.snakeLen = snakeLen;
     }
 
     public int getScore() {
@@ -192,7 +202,7 @@ public class Variables {
     }
 
     public void setScore(int score) {
-        this.score = score;
+        Variables.score = score;
     }
 
     public ImageIcon getTitleImage() {
@@ -200,6 +210,6 @@ public class Variables {
     }
 
     public void setTitleImage(ImageIcon titleImage) {
-        this.titleImage = titleImage;
+        Variables.titleImage = titleImage;
     }
 }
